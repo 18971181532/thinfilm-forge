@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "thinfilmforge"
+version = "1.0.0"
+description = "Optical thin-film design and inverse-optimisation workbench (TMM + differential evolution + Monte-Carlo yield)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "ThinFilmForge contributors" }]
+keywords = [
+    "optics", "thin-film", "optical-coating", "transfer-matrix",
+    "antireflection", "inverse-design", "differential-evolution",
+    "optoelectronics", "ellipsometry", "photonics",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+dependencies = []
+
+[project.scripts]
+thinfilm = "thinfilmforge.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/<your-account>/thinfilm-forge"
+Repository = "https://github.com/<your-account>/thinfilm-forge"
+Issues = "https://github.com/<your-account>/thinfilm-forge/issues"
+
+[tool.setuptools]
+packages = ["thinfilmforge"]
+
+[tool.setuptools.package-data]
+thinfilmforge = ["web/*.html", "web/*.css", "web/*.js"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

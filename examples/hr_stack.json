@@ -1,0 +1,61 @@
+{
+  "name": "hr_mirror",
+  "description": "13-layer quarter-wave high reflector",
+  "incident": "Air",
+  "substrate": "SiO2",
+  "layers": [
+    {
+      "material": "TiO2",
+      "thickness": 57.8133
+    },
+    {
+      "material": "SiO2",
+      "thickness": 94.1838
+    },
+    {
+      "material": "TiO2",
+      "thickness": 57.8133
+    },
+    {
+      "material": "SiO2",
+      "thickness": 94.1838
+    },
+    {
+      "material": "TiO2",
+      "thickness": 57.8133
+    },
+    {
+      "material": "SiO2",
+      "thickness": 94.1838
+    },
+    {
+      "material": "TiO2",
+      "thickness": 57.8133
+    },
+    {
+      "material": "SiO2",
+      "thickness": 94.1838
+    },
+    {
+      "material": "TiO2",
+      "thickness": 57.8133
+    },
+    {
+      "material": "SiO2",
+      "thickness": 94.1838
+    },
+    {
+      "material": "TiO2",
+      "thickness": 57.8133
+    },
+    {
+      "material": "SiO2",
+      "thickness": 94.1838
+    },
+    {
+      "material": "TiO2",
+      "thickness": 57.8133
+    }
+  ],
+  "totalThickness": 969.8
+}

@@ -1,0 +1,89 @@
+{
+  "name": "edge_filter",
+  "description": "Long-wave pass edge filter",
+  "incident": "Air",
+  "substrate": "BK7",
+  "layers": [
+    {
+      "material": "TiO2",
+      "thickness": 82.0
+    },
+    {
+      "material": "SiO2",
+      "thickness": 80.0
+    },
+    {
+      "material": "TiO2",
+      "thickness": 72.0
+    },
+    {
+      "material": "SiO2",
+      "thickness": 151.0
+    },
+    {
+      "material": "TiO2",
+      "thickness": 86.0
+    },
+    {
+      "material": "SiO2",
+      "thickness": 99.0
+    },
+    {
+      "material": "TiO2",
+      "thickness": 63.0
+    },
+    {
+      "material": "SiO2",
+      "thickness": 101.0
+    },
+    {
+      "material": "TiO2",
+      "thickness": 65.0
+    },
+    {
+      "material": "SiO2",
+      "thickness": 95.0
+    },
+    {
+      "material": "TiO2",
+      "thickness": 64.0
+    },
+    {
+      "material": "SiO2",
+      "thickness": 108.0
+    },
+    {
+      "material": "TiO2",
+      "thickness": 60.0
+    },
+    {
+      "material": "SiO2",
+      "thickness": 103.0
+    },
+    {
+      "material": "TiO2",
+      "thickness": 62.0
+    },
+    {
+      "material": "SiO2",
+      "thickness": 103.0
+    },
+    {
+      "material": "TiO2",
+      "thickness": 61.0
+    },
+    {
+      "material": "SiO2",
+      "thickness": 102.0
+    },
+    {
+      "material": "TiO2",
+      "thickness": 75.0
+    },
+    {
+      "material": "SiO2",
+      "thickness": 4.0
+    }
+  ],
+  "totalThickness": 1636.0
+}

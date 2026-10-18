@@ -1,0 +1,33 @@
+{
+  "name": "ar_broadband",
+  "description": "Six-layer broadband antireflection coating",
+  "incident": "Air",
+  "substrate": "BK7",
+  "layers": [
+    {
+      "material": "TiO2",
+      "thickness": 4.0
+    },
+    {
+      "material": "SiO2",
+      "thickness": 72.5
+    },
+    {
+      "material": "TiO2",
+      "thickness": 114.2
+    },
+    {
+      "material": "SiO2",
+      "thickness": 37.6
+    },
+    {
+      "material": "TiO2",
+      "thickness": 13.2
+    },
+    {
+      "material": "SiO2",
+      "thickness": 38.5
+    }
+  ],
+  "totalThickness": 280.0
+}

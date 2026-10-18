@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ThinFilmForge · 光学薄膜逆向设计工作台</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d7d8c'/%3E%3Cpath d='M6 22h20M6 17h20M6 12h20' stroke='%23fff' stroke-width='2' stroke-linecap='round' opacity='.85'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 40 40" aria-hidden="true">
+      <defs>
+        <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#0d7d8c"/><stop offset="1" stop-color="#2ec4d6"/>
+        </linearGradient>
+      </defs>
+      <rect x="1" y="1" width="38" height="38" rx="10" fill="url(#lg)"/>
+      <path d="M8 13h24M8 19h24M8 25h24" stroke="#fff" stroke-width="2.1" stroke-linecap="round" opacity=".9"/>
+      <path d="M13 6.5 26 33.5" stroke="#ffe9b3" stroke-width="1.6" stroke-linecap="round" opacity=".95"/>
+      <circle cx="26.5" cy="33" r="2" fill="#ffe9b3"/>
+    </svg>
+    <div>
+      <span class="brand-name">ThinFilmForge</span>
+      <span class="brand-sub">光学薄膜逆向设计工作台</span>
+    </div>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="sim" role="tab">仿真</button>
+    <button class="tab" data-tab="design" role="tab">设计</button>
+    <button class="tab" data-tab="tol" role="tab">容差</button>
+    <button class="tab" data-tab="mat" role="tab">材料库</button>
+  </nav>
+
+  <div class="topbar-right">
+    <span class="status" id="serverStatus">服务连接中</span>
+    <button class="icon-btn" id="exportBtn" title="导出当前仿真 JSON">⤓</button>
+    <button class="icon-btn" id="themeBtn" title="切换明暗主题">◐</button>
+  </div>
+</header>
+
+<!-- ================================================================ 仿真 -->
+<section class="view active" id="view-sim">
+  <aside class="sidebar">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>膜系结构</h2>
+        <span class="muted mono" id="stackMeta">—</span>
+      </div>
+
+      <label class="field">
+        <span>预设设计</span>
+        <select id="presetSelect"></select>
+      </label>
+
+      <div class="field-row">
+        <label class="field"><span>入射介质</span><select id="incidentSelect"></select></label>
+        <label class="field"><span>基底</span><select id="substrateSelect"></select></label>
+      </div>
+
+      <div class="layers-head">
+        <span>层序 · 空气 → 基底</span>
+        <button class="link-btn" id="addLayer">+ 添加层</button>
+      </div>
+      <div class="layer-list" id="layerList"></div>
+
+      <div class="field-row">
+        <label class="field">
+          <span>入射角 <b class="mono" id="thetaOut">0°</b></span>
+          <input type="range" id="thetaRange" min="0" max="85" step="1" value="0">
+        </label>
+        <label class="field">
+          <span>偏振</span>
+          <div class="segmented" id="polGroup">
+            <button data-pol="s" class="active">s</button>
+            <button data-pol="p">p</button>
+            <button data-pol="avg">自然光</button>
+          </div>
+        </label>
+      </div>
+
+      <div class="field-row">
+        <label class="field"><span>λ 起点 / nm</span><input type="number" id="lamLo" value="380" min="200" max="2000" step="10"></label>
+        <label class="field"><span>λ 终点 / nm</span><input type="number" id="lamHi" value="780" min="200" max="2000" step="10"></label>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:18px">
+      <h2>设计目标（判据）</h2>
+      <div class="bands-head"><span>用于良率与着色</span><button class="link-btn" id="addSimBand">+</button></div>
+      <div id="simBandList"></div>
+      <p class="muted" style="margin:2px 0 0">目标波段会以底色标注在光谱图上。</p>
+    </div>
+  </aside>
+
+  <div class="content">
+    <div class="card">
+      <div class="card-head">
+        <h3>光谱响应</h3>
+        <div class="legend">
+          <span><i style="background:var(--r)"></i>反射 R</span>
+          <span><i style="background:var(--t)"></i>透射 T</span>
+          <span><i style="background:var(--a)"></i>吸收 A</span>
+          <button class="chip-btn" id="scaleBtn" title="切换纵轴：线性 / 对数">线性</button>
+        </div>
+      </div>
+      <div class="canvas-wrap"><canvas id="spectrumCanvas"></canvas></div>
+    </div>
+
+    <div class="row-2">
+      <div class="card">
+        <div class="card-head"><h3>角度 · 波长反射图谱</h3><span class="hint">R(θ, λ) 自然光</span></div>
+        <div class="canvas-wrap small"><canvas id="angleCanvas"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>群延迟色散</h3><span class="hint" id="gddHint">GDD / fs²</span></div>
+        <div class="canvas-wrap small"><canvas id="gddCanvas"></canvas></div>
+      </div>
+    </div>
+
+    <div class="row-3">
+      <div class="card metrics-card" id="metricsCard"></div>
+      <div class="card">
+        <div class="card-head"><h3>导纳轨迹</h3><span class="hint" id="admitHint">550 nm</span></div>
+        <div class="canvas-wrap small"><canvas id="admitCanvas"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>膜层剖面</h3><span class="hint">厚度线性比例</span></div>
+        <div class="canvas-wrap small"><canvas id="stackCanvas"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 设计 -->
+<section class="view" id="view-design">
+  <aside class="sidebar">
+    <div class="panel">
+      <h2>逆向设计</h2>
+      <p class="muted" style="margin:0">差分进化 + 模式搜索，厚度为未知量，Fresnel 系数按材料序列预计算。</p>
+
+      <div class="field-row">
+        <label class="field"><span>高折射率材料</span><select id="designHigh"></select></label>
+        <label class="field"><span>低折射率材料</span><select id="designLow"></select></label>
+      </div>
+
+      <div class="field-row">
+        <label class="field"><span>层数</span><input type="number" id="designLayers" value="6" min="2" max="40"></label>
+        <label class="field"><span>起始层</span>
+          <select id="designStart"><option value="H">高折射率</option><option value="L">低折射率</option></select>
+        </label>
+      </div>
+
+      <div class="field-row">
+        <label class="field"><span>入射角 / °</span><input type="number" id="designTheta" value="0" min="0" max="85"></label>
+        <label class="field"><span>偏振</span>
+          <select id="designPol"><option value="s">s</option><option value="p">p</option><option value="avg">自然光</option></select>
+        </label>
+      </div>
+
+      <div class="bands-head" style="margin-top:4px"><span>目标波段</span><button class="link-btn" id="addDesignBand">+ 添加</button></div>
+      <div id="designBandList"></div>
+
+      <div class="field-row">
+        <label class="field"><span>迭代代数</span><input type="number" id="designIter" value="160" min="20" max="600"></label>
+        <label class="field"><span>种群规模</span><input type="number" id="designPop" value="26" min="8" max="60"></label>
+      </div>
+      <div class="field-row">
+        <label class="field"><span>厚度下限 / nm</span><input type="number" id="designMin" value="4" min="0" max="500"></label>
+        <label class="field"><span>厚度上限 / nm</span><input type="number" id="designMax" value="400" min="20" max="2000"></label>
+      </div>
+
+      <button class="primary" id="runDesign">开始优化</button>
+      <button class="ghost" id="seedFromCurrent">用当前膜系作为起点</button>
+
+      <div class="progress"><div id="designProgress"></div></div>
+      <div class="muted mono" id="designStatus">待运行</div>
+    </div>
+  </aside>
+
+  <div class="content">
+    <div class="card">
+      <div class="card-head"><h3>收敛曲线</h3><span class="hint" id="convergeHint">merit vs generation</span></div>
+      <div class="canvas-wrap small"><canvas id="convergeCanvas"></canvas></div>
+    </div>
+
+    <div class="row-2">
+      <div class="card">
+        <div class="card-head"><h3>优化结果光谱</h3><span class="hint" id="designMetrics"></span></div>
+        <div class="canvas-wrap"><canvas id="designSpectrum"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>膜层厚度</h3><button class="link-btn" id="applyDesign">应用为当前膜系 →</button></div>
+        <div id="designLayersTable"><div class="empty">运行一次优化后显示结果</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>判据达成</h3><span class="hint">各波段的平均 / 最差反射与罚函数</span></div>
+      <div id="designBreakdown"><div class="empty">运行一次优化后显示结果</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 容差 -->
+<section class="view" id="view-tol">
+  <aside class="sidebar">
+    <div class="panel">
+      <h2>制造容差</h2>
+      <p class="muted" style="margin:0">对膜厚、折射率与入射角施加高斯扰动，统计满足判据的比例。</p>
+
+      <label class="field"><span>膜厚误差 σ（%）</span><input type="number" id="tolSigma" value="1.0" step="0.1" min="0" max="30"></label>
+      <div class="field-row">
+        <label class="field"><span>折射率误差 σ（%）</span><input type="number" id="tolIndex" value="0.0" step="0.1" min="0" max="10"></label>
+        <label class="field"><span>角度误差 σ（°）</span><input type="number" id="tolAngle" value="0.0" step="0.1" min="0" max="10"></label>
+      </div>
+      <div class="field-row">
+        <label class="field"><span>抽样次数</span><input type="number" id="tolRuns" value="300" min="20" max="2000" step="20"></label>
+        <label class="field"><span>随机种子</span><input type="number" id="tolSeed" value="7" min="0" max="9999"></label>
+      </div>
+
+      <div class="bands-head" style="margin-top:4px"><span>判据波段</span><button class="link-btn" id="addTolBand">+ 添加</button></div>
+      <div id="tolBandList"></div>
+
+      <button class="primary" id="runTolerance">运行蒙特卡洛</button>
+      <div class="muted mono" id="tolStatus">待运行</div>
+      <p class="muted" style="margin:0">提示：减反膜的良率对膜厚误差最敏感；高反镜在中心波长附近容差较大。</p>
+    </div>
+  </aside>
+
+  <div class="content">
+    <div class="row-2">
+      <div class="card" id="yieldCard">
+        <div class="empty">运行后显示良率</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3 id="histTitle">带内反射率分布</h3><span class="hint" id="histHint">蒙特卡洛直方图</span></div>
+        <div class="canvas-wrap small"><canvas id="histCanvas"></canvas></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>良率包络</h3><span class="hint">全部抽样的 R(λ) 最小 / 最大包络 vs 标称曲线</span></div>
+      <div class="canvas-wrap"><canvas id="envelopeCanvas"></canvas></div>
+    </div>
+
+    <div class="row-2">
+      <div class="card">
+        <div class="card-head"><h3>层灵敏度</h3><span class="hint">+2 nm 扰动引起的 Δmerit</span></div>
+        <div id="sensitivityTable"><div class="empty">运行后显示</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>波段通过率</h3><span class="hint">每一条判据的达标比例</span></div>
+        <div id="bandPassTable"><div class="empty">运行后显示</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 材料 -->
+<section class="view" id="view-mat">
+  <aside class="sidebar">
+    <div class="panel">
+      <div class="panel-head"><h2>材料库</h2><span class="muted mono" id="matCount">—</span></div>
+      <input type="text" id="matSearch" placeholder="搜索材料 / 折射率…" autocomplete="off">
+      <div class="mat-list" id="matList"></div>
+    </div>
+  </aside>
+
+  <div class="content">
+    <div class="card">
+      <div class="card-head"><h3>色散曲线</h3><span class="hint" id="matHint">n(λ), k(λ)</span></div>
+      <div class="canvas-wrap"><canvas id="dispersionCanvas"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>材料说明</h3><span class="hint">文献/目录值，工艺相关</span></div>
+      <div id="matDetail" class="empty">从左侧选择一种材料</div>
+    </div>
+  </div>
+</section>
+
+<div class="tooltip" id="tooltip"></div>
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

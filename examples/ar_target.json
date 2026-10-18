@@ -1,0 +1,15 @@
+{
+  "bands": [
+    {
+      "lo": 420,
+      "hi": 680,
+      "kind": "max",
+      "value": 0.005,
+      "weight": 1.0
+    }
+  ],
+  "theta": 0,
+  "pol": "s",
+  "angles": null,
+  "regularization": 0.0
+}

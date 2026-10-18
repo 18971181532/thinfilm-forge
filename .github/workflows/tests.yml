@@ -1,0 +1,37 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -t . -v
+
+      - name: CLI smoke test (simulate)
+        run: python run.py simulate --preset ar_broadband --range 420 680 --points 21
+
+      - name: CLI smoke test (design)
+        run: |
+          python run.py design --materials TiO2 SiO2 --layers 5 \
+            --band 500:600:min:0.9 --iterations 20 --time 10
+
+      - name: Package metadata check
+        run: python -m pip install --upgrade build && python -m build

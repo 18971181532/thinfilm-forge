@@ -1,0 +1,18 @@
+{
+  "bands": [
+    {
+      "lo": 400,
+      "hi": 470,
+      "kind": "max",
+      "value": 0.02,
+      "weight": 1.0
+    },
+    {
+      "lo": 520,
+      "hi": 700,
+      "kind": "min",
+      "value": 0.97,
+      "weight": 1.0
+    }
+  ]
+}
