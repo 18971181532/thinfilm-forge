@@ -30,9 +30,9 @@ dependencies = []
 thinfilm = "thinfilmforge.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/<your-account>/thinfilm-forge"
-Repository = "https://github.com/<your-account>/thinfilm-forge"
-Issues = "https://github.com/<your-account>/thinfilm-forge/issues"
+Homepage = "https://github.com/18971181532/thinfilm-forge"
+Repository = "https://github.com/18971181532/thinfilm-forge"
+Issues = "https://github.com/18971181532/thinfilm-forge/issues"
 
 [tool.setuptools]
 packages = ["thinfilmforge"]

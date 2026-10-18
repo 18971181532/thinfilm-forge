@@ -5,6 +5,9 @@
   <img alt="deps" src="https://img.shields.io/badge/dependencies-zero-0f8a7e">
   <img alt="tests" src="https://img.shields.io/badge/tests-48%20passed-2e7d32">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-b45309">
+  <a href="https://github.com/18971181532/thinfilm-forge/actions/workflows/tests.yml">
+    <img alt="tests" src="https://github.com/18971181532/thinfilm-forge/actions/workflows/tests.yml/badge.svg">
+  </a>
 </p>
 
 > 给定一条光谱判据（"420–680 nm 反射率低于 0.5%"、"520–700 nm 反射率高于 97%"），
@@ -135,7 +138,7 @@ $$\mathrm{GD}=-\frac{d\varphi}{d\omega},\qquad \mathrm{GDD}=\frac{d\,\mathrm{GD}
 ## 5. 安装与运行
 
 ```bash
-git clone https://github.com/<your-account>/thinfilm-forge.git
+git clone https://github.com/18971181532/thinfilm-forge.git
 cd thinfilm-forge
 
 # 方式 A：直接运行（无需安装）
